@@ -1,6 +1,7 @@
+import React, { useState } from 'react';
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@material-ui/icons';
-import React from 'react';
 import styled from 'styled-components';
+import { sliderItems } from '../data';
 
 const Container = styled.div`
     width: 100%;
@@ -34,7 +35,8 @@ const Arrow = styled.div`
 const Wrapper = styled.div`
     height: 100%;
     display:flex;
-    transform: translateX(0vw);
+    transition: all 1.5s ease;
+    transform: translateX(${props=>props.slideIndex * -100}vw); // slideni harakatlantirish uchun props
 `
 
 const Slide = styled.div`
@@ -78,45 +80,34 @@ const Button = styled.button`
 const Slider = () => {
 
     const [slideIndex, setSlideIndex] = useState(0);
-    const handleClick = (direction) => {};
+    const handleClick = (direction) => {
+        if (direction === "left") { // slideni harakatga keltiradi
+            setSlideIndex(slideIndex > 0 ? slideIndex - 1 : 2);
+        } else {
+            setSlideIndex(slideIndex < 2 ? slideIndex + 1 : 0);
+        }
+    };
     return (
         <Container>
-            <Arrow direction="left" onClick={() => handleClick("left")}>
+             <Arrow direction="left" onClick={() => handleClick("left")}> {/*// button bosilganda */}
                 <ArrowLeftOutlined />
             </Arrow>
-            <Wrapper>
-                <Slide bg="f5fafd">
-                    <ImgContainer>
-                        <Image src="https://images.pexels.com/photos/5444881/pexels-photo-5444881.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" />
-                    </ImgContainer>
-                    <InfoContainer>
-                        <Title>SUMMER SALE</Title>
-                        <Desc>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS</Desc>
-                        <Button>SHOW NOW</Button>
-                    </InfoContainer>
-                </Slide>
+            <Wrapper slideIndex={slideIndex}>
+                {sliderItems.map((item) => (
 
-                <Slide bg="fcf1ed">
+                    <Slide bg={item.bg} key={item.id}>
                     <ImgContainer>
-                        <Image src="https://images.pexels.com/photos/5444881/pexels-photo-5444881.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" />
+                        <Image src={item.img} />
                     </ImgContainer>
                     <InfoContainer>
-                        <Title>WINTER SALE</Title>
-                        <Desc>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS</Desc>
+                        <Title>{item.title}</Title>
+                        <Desc>{item.desc}</Desc>
                         <Button>SHOW NOW</Button>
                     </InfoContainer>
                 </Slide>
+                ))}
 
-                <Slide bg="fbf0f4">
-                    <ImgContainer>
-                        <Image src="https://images.pexels.com/photos/5444881/pexels-photo-5444881.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" />
-                    </ImgContainer>
-                    <InfoContainer>
-                        <Title>POPULAR SALE</Title>
-                        <Desc>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS</Desc>
-                        <Button>SHOW NOW</Button>
-                    </InfoContainer>
-                </Slide>
+                
             </Wrapper>
             <Arrow direction="right" onClick={() => handleClick("right")}>
                 <ArrowRightOutlined />
